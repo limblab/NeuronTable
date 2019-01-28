@@ -43,7 +43,7 @@ elseif isfield(trial_data,'date_time')
         date = cell(tab_height,1);
         warning('More than one date in trial data')
     else
-        date = repmat(date_temp{1},tab_height,1);
+        date = repmat(date_temp(1),tab_height,1);
     end
 end
 
