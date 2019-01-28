@@ -36,11 +36,14 @@ if isfield(trial_data,'date')
         date = repmat({trial_data(1).date},tab_height,1);
     end
 elseif isfield(trial_data,'date_time')
-    if numel(unique(cat(1,{trial_data.date_time}))) > 1
+    % split and check
+    date_temp = regexp(cat(1,{trial_data.date_time}),'\d*\/\d*\/\d*','match');
+    date_temp = vertcat(date_temp{:});
+    if numel(unique(date_temp)) > 1
         date = cell(tab_height,1);
         warning('More than one date in trial data')
     else
-        date = repmat({trial_data(1).date_time},tab_height,1);
+        date = repmat(date_temp{1},tab_height,1);
     end
 end
 
