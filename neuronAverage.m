@@ -57,6 +57,12 @@ for key_idx = 1:height(keyTable)
     circ_cols = contains(dataTable.Properties.VariableDescriptions,'circular');
     lin_cols = ~circ_cols;
 
+    % warning for linear columns that aren't labeled as such
+    nolabel_cols = lin_cols & ~strcmpi(dataTable.Properties.VariableDescriptions,'linear');
+    if any(nolabel_cols)
+        msg = sprintf('Some columns have VariableDescriptions not labeled linear or circular... Defaulting to linear mean. Column names:\n%s',repmat('%s\n',1,length(nolabel_cols)));
+        warning(msg,dataTable.Properties.VariableNames{nolabel_cols})
+    end
     % for all linear columns take regular mean
     meanTable_lin = varfun(@mean,dataTable(:,lin_cols));
 
