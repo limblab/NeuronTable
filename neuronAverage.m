@@ -8,10 +8,12 @@
 % Behaves very similar to trialAverage in TrialData structure
 %
 % INPUTS:
-%   trial_data : the struct
-%   keycols : (int array or cell array of strings) indices for the columns 
-%       to be used as keys into the NeuronTable. This function will average over
-%       all rows with the same key.
+%   neuronTable : the table
+%   params - parameters struct
+%       .keycols : (int array or cell array of strings) indices for the columns 
+%           to be used as keys into the NeuronTable. This function will average over
+%           all rows with the same key.
+%       .do_ci - whether to calculate confidence bounds by percentile (default - true)
 %
 % OUTPUTS:
 %   avg_data : struct representing average across trials for each condition
@@ -23,12 +25,12 @@
 %       Note: gives a struct of size #_TARGETS * #_EPOCHS
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [avgTable,cond_idx] = neuronAverage(neuronTable, keycols)
+function [avgTable,cond_idx] = neuronAverage(neuronTable, params)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Some undocumented extra parameters
-if nargin > 2, assignParams(who,params); end % overwrite parameters
+keycols = strcmpi(neuronTable.Properties.VariableDescriptions,'meta');
+do_ci = true;
+assignParams(who,params);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-assert(nargin>1,'Key columns not provided as input.')
 
 % transform keycols into logical index array for simplicity
 if ~islogical(keycols)
@@ -69,23 +71,27 @@ for key_idx = 1:height(keyTable)
     % strip 'mean' from variable names
     meanTable_lin.Properties.VariableNames = strrep(meanTable_lin.Properties.VariableNames,'mean_','');
 
-    % calculate confidence intervals
-    ciLoArr = prctile(dataTable{:,lin_cols},2.5,1);
-    ciHiArr = prctile(dataTable{:,lin_cols},97.5,1);
-
-    ciLoTable = meanTable_lin;
-    ciHiTable = meanTable_lin;
-    ciLoTable{:,:} = ciLoArr;
-    ciHiTable{:,:} = ciHiArr;
-    ciLoTable.Properties.VariableNames = strcat(ciLoTable.Properties.VariableNames,'CILo');
-    ciHiTable.Properties.VariableNames = strcat(ciHiTable.Properties.VariableNames,'CIHi');
-
     % for all circular data columns, take circ_mean
     meanTable_circ = varfun(@circ_mean,dataTable(:,circ_cols));
 
     % strip 'mean' from variable names
     meanTable_circ.Properties.VariableNames = strrep(meanTable_circ.Properties.VariableNames,'circ_mean_','');
 
-    tab_append{key_idx} = horzcat(meanTable_circ,meanTable_lin,ciLoTable,ciHiTable);
+    if do_ci
+        % calculate confidence intervals
+        ciLoArr = prctile(dataTable{:,lin_cols},2.5,1);
+        ciHiArr = prctile(dataTable{:,lin_cols},97.5,1);
+
+        ciLoTable = meanTable_lin;
+        ciHiTable = meanTable_lin;
+        ciLoTable{:,:} = ciLoArr;
+        ciHiTable{:,:} = ciHiArr;
+        ciLoTable.Properties.VariableNames = strcat(ciLoTable.Properties.VariableNames,'CILo');
+        ciHiTable.Properties.VariableNames = strcat(ciHiTable.Properties.VariableNames,'CIHi');
+        tab_append{key_idx} = horzcat(meanTable_circ,meanTable_lin,ciLoTable,ciHiTable);
+    else
+        tab_append{key_idx} = horzcat(meanTable_circ,meanTable_lin);
+    end
+
 end
 avgTable = horzcat(keyTable,vertcat(tab_append{:}));
