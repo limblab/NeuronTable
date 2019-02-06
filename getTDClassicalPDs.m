@@ -142,9 +142,11 @@ for in_signal_idx = 1:num_in_signals
     if bootForTuning
         pdTable_cell{in_signal_idx} = table(PD,PDCI,isTuned,...
             'VariableNames',strcat([prefix in_signals{in_signal_idx,1}],{'PD','PDCI','Tuned'}));
+        pdTable_cell{in_signal_idx}.Properties.VariableDescriptions = repmat({'circular'},1,3);
     else
         pdTable_cell{in_signal_idx} = table(PD,...
             'VariableNames',strcat([prefix in_signals{in_signal_idx,1}],{'PD'}));
+        pdTable_cell{in_signal_idx}.Properties.VariableDescriptions = {'circular'};
     end
 end
 starter = makeNeuronTableStarter(trial_data,params);
