@@ -63,9 +63,6 @@ if isfield(params,'meta')
     tab_append = cell(1,numel(fields));
     for fn = 1:numel(fields)
         metafield = params.meta.(fields{fn});
-        if size(metafield,2)>1
-            metafield = {metafield};
-        end
         arr_append = repmat(metafield,tab_height,1);
         tab_append{fn} = table(arr_append,'VariableNames',{fields{fn}});
     end
