@@ -56,8 +56,9 @@ for key_idx = 1:height(keyTable)
     dataTable = neuronTable_select(:,~keycols);
 
     % figure out which columns have circular data
+    meta_cols = strcmpi(dataTable.Properties.VariableDescriptions,'meta');
     circ_cols = contains(dataTable.Properties.VariableDescriptions,'circular');
-    lin_cols = ~circ_cols;
+    lin_cols = ~circ_cols & ~meta_cols;
 
     % warning for linear columns that aren't labeled as such
     nolabel_cols = lin_cols & ~strcmpi(dataTable.Properties.VariableDescriptions,'linear');
@@ -92,6 +93,5 @@ for key_idx = 1:height(keyTable)
     else
         tab_append{key_idx} = horzcat(meanTable_circ,meanTable_lin);
     end
-
 end
 avgTable = horzcat(keyTable,vertcat(tab_append{:}));
