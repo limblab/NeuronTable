@@ -1,5 +1,5 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% function [avg_data, cond_idx] = neuronAverage(neuronTable, keycols)
+% function [avg_data, cond_idx] = neuronAverage(neuronTable, params)
 % 
 % Averages over a NeuronTable structure for each given condition. Returns
 % a new NeuronTable struct with one row per unique condition, with columns
