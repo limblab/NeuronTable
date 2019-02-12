@@ -8,6 +8,7 @@ function plotTuning(neuron_table,params)
 %       be one row or several rows with the same signalID
 %   params - parameters struct
 %       .maxFR - (numeric) maximum value to plot (no default)
+%       .minFR - (numeric) minimum value to plot (default: 0)
 %       .unroll - (bool) whether to plot a flat curve or polar curve (default: false)
 %       .color - (numeric or char) specify color to plot
 %       .pd_colname - (char) name of PD column (default: 'velPD')
@@ -15,6 +16,7 @@ function plotTuning(neuron_table,params)
 %       .plot_ci - (bool) whether to plot confidence interval (default: true)
 
 maxFR = [];
+minFR = 0;
 unroll = false;
 curve_colname = 'velCurve';
 assignParams(who,params)
@@ -71,7 +73,7 @@ end
 % plot settings
 if unroll
     set(gca,'box','off','tickdir','out',...
-        'xlim',[-pi pi],'ylim',[0 maxFR],...
+        'xlim',[-pi pi],'ylim',[minFR maxFR],...
         'xtick',[-pi, 0, pi],'xticklabel',{'-180','','180'})
 end
 
