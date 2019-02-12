@@ -4,10 +4,8 @@ function plotTuning(neuron_table,params)
 % is a 3 element vector for the color of the plotted tuning curve and PD.
 % pdData is one row taken from binnedData object.
 % Inputs:
-%   pdData - table including PDs for one unit. Should either be one row or
-%       several rows with the same signalID
-%   curve - table including tuning curve for one unit. Should either be one row or
-%       several rows with the same signalID
+%   neuron_table - table including PDs and tuning curves for one unit. Should either
+%       be one row or several rows with the same signalID
 %   params - parameters struct
 %       .maxFR - (numeric) maximum value to plot (no default)
 %       .unroll - (bool) whether to plot a flat curve or polar curve (default: false)
