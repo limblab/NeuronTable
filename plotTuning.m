@@ -10,7 +10,6 @@ function plotTuning(neuron_table,params)
 %       .maxFR - (numeric) maximum value to plot (no default)
 %       .unroll - (bool) whether to plot a flat curve or polar curve (default: false)
 %       .color - (numeric or char) specify color to plot
-%       .pd_linspec - (char) line specification for plot function for PD (default: '-')
 %       .pd_colname - (char) name of PD column (default: 'velPD')
 %       .curve_colname - (char) name of curve column (default: 'velCurve')
 %       .plot_ci - (bool) whether to plot confidence interval (default: true)
