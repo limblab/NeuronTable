@@ -60,14 +60,14 @@ else
         set(p,'linewidth',0.44)
     end
 
-    % plot average curve in thicker line
-    avg_table = neuronAverage(neuron_table,struct('keycols','signalID'));
-    p = plot_curve(avg_table,indiv_params);
-    set(p,'linewidth',2.1,'color','k')
+    % % plot average curve in thicker line
+    % avg_table = neuronAverage(neuron_table,struct('keycols','signalID'));
+    % p = plot_curve(avg_table,indiv_params);
+    % set(p,'linewidth',2.1)
 
-    % plot average pd in thicker line
-    p = plot_pd(avg_table,indiv_params);
-    set(p,'linewidth',2.09,'color','k')
+    % % plot average pd in thicker line
+    % p = plot_pd(avg_table,indiv_params);
+    % set(p,'linewidth',2.09)
 end
 
 % plot settings
