@@ -41,6 +41,7 @@ bootForTuning = true;
 % Some undocumented parameters
 alpha_cutoff = 0.05;
 num_boots = 1000;
+num_test_dirs = 1000; % number of directions to test for resampling weights
 
 if nargin > 1, assignParams(who,params); end % overwrite parameters
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -73,7 +74,8 @@ for in_signal_idx = 1:num_in_signals
 
     % resample inDir and outArr so that inDir is uniformly distributed
     % first estimate current distrubution of inDir with very smooth kernel
-    test_dirs = linspace(-pi,pi,1000)';
+    test_dirs = linspace(-pi,pi,num_test_dirs+1)'; % directions in which to test sampling bias
+    test_dirs = test_dirs(2:end);
     pdf = circ_ksdensity(inDir,test_dirs,10);
     % We're going to sample the directions inversely to their frequency
     sample_weight = 1./interp1(test_dirs,pdf,inDir);
