@@ -78,6 +78,8 @@ for in_signal_idx = 1:num_in_signals
     test_dirs = test_dirs(2:end);
     pdf = circ_ksdensity(inDir,test_dirs,10);
     % We're going to sample the directions inversely to their frequency
+    test_dirs = [-pi;test_dirs];
+    pdf = [pdf(end);pdf];
     sample_weight = 1./interp1(test_dirs,pdf,inDir);
 
     % loop over each out_signal to get PDs and tuned-ness
