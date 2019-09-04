@@ -57,8 +57,9 @@ for key_idx = 1:height(keyTable)
 
     % figure out which columns have circular data
     meta_cols = strcmpi(dataTable.Properties.VariableDescriptions,'meta');
+    cell_cols = strcmpi(dataTable.Properties.VariableDescriptions,'cell');
     circ_cols = contains(dataTable.Properties.VariableDescriptions,'circular');
-    lin_cols = ~circ_cols & ~meta_cols;
+    lin_cols = ~circ_cols & ~meta_cols & ~cell_cols;
 
     % warning for linear columns that aren't labeled as such
     nolabel_cols = lin_cols & ~strcmpi(dataTable.Properties.VariableDescriptions,'linear');
