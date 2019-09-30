@@ -13,6 +13,9 @@
 %       .keycols : (int array or cell array of strings) indices for the columns 
 %           to be used as keys into the NeuronTable. This function will average over
 %           all rows with the same key.
+%       .ignorecols : (int array or cell array of strings) indices for the columns 
+%           to be ignored in the NeuronTable. This function will average over
+%           all rows with the same key.
 %       .do_ci - whether to calculate confidence bounds by percentile (default - true)
 %
 % OUTPUTS:
@@ -28,16 +31,24 @@
 function [avgTable,cond_idx] = neuronAverage(neuronTable, params)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 keycols = strcmpi(neuronTable.Properties.VariableDescriptions,'meta');
+ignorecols = {};
 do_ci = true;
 assignParams(who,params);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% transform keycols into logical index array for simplicity
+% transform keycols and ignorecols into logical index array for simplicity
 if ~islogical(keycols)
     if isnumeric(keycols)
         keycols = ismember(1:width(neuronTable),keycols);
     else % it's probably a cell array of strings
         keycols = ismember(neuronTable.Properties.VariableNames,keycols);
+    end
+end
+if ~islogical(ignorecols)
+    if isnumeric(ignorecols)
+        ignorecols = ismember(1:width(neuronTable),ignorecols);
+    else % it's probably a cell array of strings
+        ignorecols = ismember(neuronTable.Properties.VariableNames,ignorecols);
     end
 end
 assert(any(keycols),'Key columns do not match given table')
@@ -53,7 +64,7 @@ for key_idx = 1:height(keyTable)
     neuronTable_select = neuronTable(cond_idx(key_idx,:),:);
 
     % extract data
-    dataTable = neuronTable_select(:,~keycols);
+    dataTable = neuronTable_select(:,~keycols & ~ignorecols);
 
     % figure out which columns have circular data
     meta_cols = strcmpi(dataTable.Properties.VariableDescriptions,'meta');
