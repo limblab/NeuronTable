@@ -33,6 +33,7 @@ function [avgTable,cond_idx] = neuronAverage(neuronTable, params)
 keycols = strcmpi(neuronTable.Properties.VariableDescriptions,'meta');
 ignorecols = {};
 do_ci = true;
+do_nanmean = false;
 assignParams(who,params);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -79,10 +80,17 @@ for key_idx = 1:height(keyTable)
         warning(msg,dataTable.Properties.VariableNames{nolabel_cols})
     end
     % for all linear columns take regular mean
-    meanTable_lin = varfun(@mean,dataTable(:,lin_cols));
+    if do_nanmean
+        meanTable_lin = varfun(@nanmean,dataTable(:,lin_cols));
 
-    % strip 'mean' from variable names
-    meanTable_lin.Properties.VariableNames = strrep(meanTable_lin.Properties.VariableNames,'mean_','');
+        % strip 'nanmean' from variable names
+        meanTable_lin.Properties.VariableNames = strrep(meanTable_lin.Properties.VariableNames,'nanmean_','');
+    else
+        meanTable_lin = varfun(@mean,dataTable(:,lin_cols));
+
+        % strip 'mean' from variable names
+        meanTable_lin.Properties.VariableNames = strrep(meanTable_lin.Properties.VariableNames,'mean_','');
+    end
 
     % for all circular data columns, take circ_mean
     meanTable_circ = varfun(@circ_mean,dataTable(:,circ_cols));
