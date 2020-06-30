@@ -37,7 +37,7 @@ if isfield(trial_data,'date')
     end
 elseif isfield(trial_data,'date_time')
     % split and check
-    date_temp = regexp(cat(1,{trial_data.date_time}),'\d*\/\d*\/\d*','match');
+    date_temp = regexp(cat(1,{trial_data.date_time}),'\d*[\/-]\d*[\/-]\d*','match');
     date_temp = vertcat(date_temp{:});
     if numel(unique(date_temp)) > 1
         date = cell(tab_height,1);
